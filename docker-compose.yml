@@ -1,15 +1,13 @@
 services:
  backend:
-  build:
-   context: ./martdb
-  image: mymartdb
+  build: ./martdb
+  image: pranulrathour/mymartdb
   restart: always
   networks:
    - mynet
  frontend:
-  build:
-   context: ./My-Mart
-  image: mymart
+  build: ./My-Mart
+  image: pranulrathour/mymart
   restart: always
   networks:
    - mynet

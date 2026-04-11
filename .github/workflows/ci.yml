@@ -1,0 +1,51 @@
+name: Deploy My Mart
+
+on:
+ push:
+  branches: ["main"]
+
+permissons:
+ pages: write
+ id-token: write
+
+jobs:
+ build:
+  runs-on: ubuntu-latest
+
+  steps:
+   - name: docker login
+     run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    
+   - name: Build My_Mart Docker Images
+     run: docker build -t mymart ./My_Mart
+
+   - name: Build My_Mart_DB Docker Image
+     run: docker build -t mymart ./martdb
+  
+   - name: AWS login
+     run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECERET_KEY }}
+
+   - name: AWS ECR login
+     run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 585768189252.dkr.ecr.us-east-1.amazonaws.com
+
+   - name: Tag My_Mart name
+     run: docker tag pranulrathour/mymart:latest 585768189252.dkr.ecr.us-east-1.amazonaws.com/pranulrathour/mymart:latest
+   
+   - name: Tag My_Mart_DB name
+     run: docker tag pranulrathour/mymartdb:latest 585768189252.dkr.ecr.us-east-1.amazonaws.com/pranulrathour/mymartdb:latest
+
+   - name: Pushing My_Mart image to ECR
+     run: docker push 585768189252.dkr.ecr.us-east-1.amazonaws.com/pranulrathour/mymart:latest
+    
+   - name: Pushing My_Mart_DB image to ECR
+     run: docker push 585768189252.dkr.ecr.us-east-1.amazonaws.com/pranulrathour/mymartdb:latest
+
+success-message: 
+  needs: [build, test]
+  runs-on: ubuntu-latest
+  if: sucsess()
+  steps:
+   - run: echo "All jobs passed"
+    

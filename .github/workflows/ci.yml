@@ -4,7 +4,7 @@ on:
  push:
   branches: ["main"]
 
-permissons:
+permissions:
  pages: write
  id-token: write
 
@@ -42,10 +42,10 @@ jobs:
    - name: Pushing My_Mart_DB image to ECR
      run: docker push 585768189252.dkr.ecr.us-east-1.amazonaws.com/pranulrathour/mymartdb:latest
 
-success-message: 
-  needs: [build, test]
-  runs-on: ubuntu-latest
-  if: sucsess()
-  steps:
-   - run: echo "All jobs passed"
+  success-message: 
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+    - run: echo "All jobs passed"
     

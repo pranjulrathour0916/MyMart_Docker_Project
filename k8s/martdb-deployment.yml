@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: martdb
+  namespace: mart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: martdb
+  template:
+    metadata:
+      labels:
+        app: martdb
+    spec:
+      containers:
+      - name: martdb
+        image: pranulrathour/mymartdb
+        ports:
+        - containerPort: 5001

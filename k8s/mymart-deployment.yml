@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mymart
+  namespace: mart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mymart
+  
+  template:
+    metadata:
+      labels:
+        app: mymart
+    
+    spec:
+      containers:
+      - name: mymart
+        image: pranulrathour/mymart
+        ports:
+        - containerPort: 80
